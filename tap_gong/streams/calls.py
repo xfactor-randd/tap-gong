@@ -10,6 +10,7 @@ class CallsStream(GongStream):
     path = "/v2/calls/extensive"
     primary_keys = ["id"]
     records_jsonpath = "$.calls[*]"
+    replication_key = "started" 
     next_page_token_jsonpath = "$.records.cursor"
     rest_method = "POST"
 
