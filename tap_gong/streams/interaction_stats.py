@@ -1,9 +1,11 @@
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Any, Optional
+
 import requests
 from singer_sdk import typing as th  # JSON Schema typing helpers
-from singer_sdk.exceptions import RetriableAPIError, FatalAPIError
-from tap_gong.client import GongStream
+from singer_sdk.exceptions import FatalAPIError, RetriableAPIError
+
 from tap_gong import config_helper
+from tap_gong.client import GongStream
 from tap_gong.utils import log_error
 
 
@@ -12,14 +14,15 @@ class InteractionStatsStream(GongStream):
     schema = th.PropertiesList(
         th.Property("userEmailAddress", th.StringType),
         th.Property("userId", th.StringType),
-        th.Property("personInteractionStats",
-                    th.ArrayType(
-                        th.ObjectType(
-                            th.Property("name", th.StringType),
-                            th.Property("value", th.NumberType)
-                        )
-                    )
-                    )
+        th.Property(
+            "personInteractionStats",
+            th.ArrayType(
+                th.ObjectType(
+                    th.Property("name", th.StringType),
+                    th.Property("value", th.NumberType),
+                )
+            ),
+        ),
     ).to_dict()
     path = "/v2/stats/interaction"
     primary_keys = ["userId"]
@@ -32,16 +35,19 @@ class InteractionStatsStream(GongStream):
     retried = False
     modified_request = False
 
-    def prepare_request_payload(self, context: Optional[dict], next_page_token: Optional[Any]) -> Optional[dict]:
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
         """Prepare the data payload for the REST API request."""
         stats_filter_dates = config_helper.get_stats_dates_from_config(
-            self.config, self.retried)
+            self.config, self.retried
+        )
         request_body = {
             "cursor": next_page_token,
             "filter": {
                 "fromDate": stats_filter_dates["stats_from_date"],
-                "toDate": stats_filter_dates["stats_to_date"]
-            }
+                "toDate": stats_filter_dates["stats_to_date"],
+            },
         }
         return request_body
 
@@ -101,7 +107,9 @@ class InteractionStatsStream(GongStream):
             if self.retried and not self.modified_request:
                 prepared_request = self.prepare_request(None, None)
                 self.modified_request = True
-            response = self.requests_session.send(prepared_request, timeout=self.timeout)
+            response = self.requests_session.send(
+                prepared_request, timeout=self.timeout
+            )
             self._write_request_duration_log(
                 endpoint=self.path,
                 response=response,
@@ -114,8 +122,8 @@ class InteractionStatsStream(GongStream):
             return response
         except RetriableAPIError as e:
             if self.tries == self.backoff_max_tries():
-                log_error(e, self.config, self.logger, 'gong.GongApiError')
+                log_error(e, self.config, self.logger, "gong.GongApiError")
             raise
         except FatalAPIError as e:
-            log_error(e, self.config, self.logger, 'gong.GongApiError')
+            log_error(e, self.config, self.logger, "gong.GongApiError")
             raise

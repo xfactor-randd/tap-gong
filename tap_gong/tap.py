@@ -2,15 +2,16 @@
 
 from typing import List
 
-from singer_sdk import Tap, Stream
+from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+
 from tap_gong import config_helper
 from tap_gong.streams import (
+    AggregatedActivityStream,
     CallsStream,
     CallTranscriptsStream,
-    UsersStream,
     InteractionStatsStream,
-    AggregatedActivityStream
+    UsersStream,
 )
 
 STREAM_TYPES = [
@@ -18,12 +19,13 @@ STREAM_TYPES = [
     CallTranscriptsStream,
     UsersStream,
     InteractionStatsStream,
-    AggregatedActivityStream
+    AggregatedActivityStream,
 ]
 
 
 class TapGong(Tap):
     """Gong tap class."""
+
     name = "tap-gong"
 
     config_jsonschema = th.PropertiesList(

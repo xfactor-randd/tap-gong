@@ -1,4 +1,3 @@
-from typing import Any, Dict, Optional, Union, List, Iterable
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 from tap_gong.client import GongStream
@@ -22,15 +21,17 @@ class UsersStream(GongStream):
         th.Property("phoneNumber", th.StringType),
         th.Property("extension", th.StringType),
         th.Property("personalMeetingUrls", th.ArrayType(th.StringType)),
-        th.Property("settings", th.ObjectType(
-            th.Property("webConferencesRecorded", th.BooleanType),
-            th.Property("preventWebConferenceRecording", th.BooleanType),
-            th.Property("telephonyCallsImported", th.BooleanType),
-            th.Property("emailsImported", th.BooleanType),
-            th.Property("preventEmailImport", th.BooleanType),
-            th.Property("nonRecordedMeetingsImported", th.BooleanType),
-        )),
+        th.Property(
+            "settings",
+            th.ObjectType(
+                th.Property("webConferencesRecorded", th.BooleanType),
+                th.Property("preventWebConferenceRecording", th.BooleanType),
+                th.Property("telephonyCallsImported", th.BooleanType),
+                th.Property("emailsImported", th.BooleanType),
+                th.Property("preventEmailImport", th.BooleanType),
+                th.Property("nonRecordedMeetingsImported", th.BooleanType),
+            ),
+        ),
         th.Property("managerId", th.StringType),
         th.Property("meetingConsentPageUrl", th.StringType),
     ).to_dict()
-
