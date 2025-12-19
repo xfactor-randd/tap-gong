@@ -32,7 +32,9 @@ class GongStream(RESTStream):
             f"{self.config.get('access_key')}:{self.config.get('access_key_secret')}"
         ).encode()
 
-        return {"Authorization": f"Basic {raw_token.decode('ascii')}"}
+        return {
+            "Authorization": f"Basic {base64.b64encode(raw_token).decode('ascii')}",
+        }
 
     def get_url_params(self, context, next_page_token) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
