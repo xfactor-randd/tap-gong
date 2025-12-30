@@ -13,7 +13,7 @@ class AggregatedActivityStream(GongStream):
     name = "aggregated_activity"
     schema = th.PropertiesList(
         th.Property("userEmailAddress", th.StringType),
-        th.Property("userId", th.StringType),
+        th.Property("userId", th.StringType, required=True),
         th.Property(
             "userAggregateActivityStats",
             th.ObjectType(

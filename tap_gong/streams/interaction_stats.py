@@ -13,7 +13,7 @@ class InteractionStatsStream(GongStream):
     name = "interaction_stats"
     schema = th.PropertiesList(
         th.Property("userEmailAddress", th.StringType),
-        th.Property("userId", th.StringType),
+        th.Property("userId", th.StringType, required=True),
         th.Property(
             "personInteractionStats",
             th.ArrayType(

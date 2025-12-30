@@ -20,7 +20,7 @@ class CallTranscriptsStream(GongStream):
     ignore_parent_replication_key = False
 
     schema = th.PropertiesList(
-        th.Property("callId", th.StringType),
+        th.Property("callId", th.StringType, required=True),
         th.Property(
             "transcript",
             th.ArrayType(
