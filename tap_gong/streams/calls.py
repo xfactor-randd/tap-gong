@@ -18,7 +18,7 @@ class CallsStream(GongStream):
     rest_method = "POST"
 
     schema = th.PropertiesList(
-        th.Property("id", th.StringType),
+        th.Property("id", th.StringType, required=True),
         th.Property("started", th.DateTimeType),
         th.Property(
             "metaData",

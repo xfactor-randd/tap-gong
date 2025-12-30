@@ -10,7 +10,7 @@ class UsersStream(GongStream):
     records_jsonpath = "$.users[*]"
 
     schema = th.PropertiesList(
-        th.Property("id", th.StringType),
+        th.Property("id", th.StringType, required=True),
         th.Property("emailAddress", th.StringType),
         th.Property("created", th.DateTimeType),
         th.Property("active", th.BooleanType),
